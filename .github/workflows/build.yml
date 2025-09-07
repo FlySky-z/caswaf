@@ -61,7 +61,7 @@ jobs:
     name: Release And Push
     runs-on: ubuntu-latest
     if: github.repository == 'casbin/caswaf' && github.event_name == 'push'
-    needs: [ frontend, backend]
+    needs: [ frontend, backend ]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -72,11 +72,7 @@ jobs:
         id: semantic
         uses: cycjimmy/semantic-release-action@v4
         env:
-          GH_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
-
-      - name: Fetch Current version
-        id: get-current-tag
-        uses: actions-ecosystem/action-get-latest-tag@v1.6.0
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Decide Should_Push Or Not
         id: should_push
@@ -121,4 +117,4 @@ jobs:
           target: STANDARD
           platforms: linux/amd64
           push: true
-          tags: casbin/caswaf:${{steps.get-current-tag.outputs.tag }},casbin/caswaf:latest
+          tags: casbin/caswaf:${{ steps.semantic.outputs.new_release_version }},casbin/caswaf:latest
